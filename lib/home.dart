@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onboardingapptask/alarm_notification_service.dart';
 
 class AlarmApp extends StatelessWidget {
   const AlarmApp({Key? key}) : super(key: key);
@@ -70,6 +71,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
     // Add new alarm to the list
     setState(() {
+      scheduleAlarm(
+        DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        ),
+      );
       _alarms.add(
         Alarm(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -180,55 +190,58 @@ class _AlarmScreenState extends State<AlarmScreen> {
                           ),
                         )
                       : ListView.builder(
-  itemCount: _alarms.length,
-  itemBuilder: (context, index) {
-    final alarm = _alarms[index];
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  _formatTime(alarm.time),
-                  style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 66),
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(
-                    _formatDate(alarm.date),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Switch(
-              value: alarm.enabled,
-              onChanged: (_) => _toggleAlarm(alarm.id),
-              activeColor: const Color.fromARGB(255, 85, 75, 212),
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-)
-                        ),
+                          itemCount: _alarms.length,
+                          itemBuilder: (context, index) {
+                            final alarm = _alarms[index];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1E1E1E),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _formatTime(alarm.time),
+                                          style: const TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 66),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 6),
+                                          child: Text(
+                                            _formatDate(alarm.date),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Switch(
+                                      value: alarm.enabled,
+                                      onChanged: (_) => _toggleAlarm(alarm.id),
+                                      activeColor: const Color.fromARGB(
+                                          255, 85, 75, 212),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )),
             ],
           ),
         ),
