@@ -4,14 +4,10 @@ import 'package:onboardingapptask/features/onboarding/screens/onboarding_flow.da
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-void main() async{
-
-
+void main() async {
   //AlarmManager initialization
   WidgetsFlutterBinding.ensureInitialized();
   await AndroidAlarmManager.initialize();
@@ -26,9 +22,7 @@ void main() async{
   await flutterLocalNotificationsPlugin.initialize(initSettings);
 
   runApp(const MyApp());
-  
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,4 +34,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

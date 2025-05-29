@@ -17,14 +17,31 @@ class _AlarmPageState extends State<AlarmPage> {
   List<Alarm> get alarms => _repository.getAlarms();
 
   Future<void> _addAlarm() async {
-    final status = await Permission.scheduleExactAlarm.request();
-    if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission not granted!')),
-      );
-      return;
+    // Request notification permission (Android 13+)
+    var notifStatus = await Permission.notification.status;
+    if (!notifStatus.isGranted) {
+      notifStatus = await Permission.notification.request();
+      if (!notifStatus.isGranted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notification permission not granted!')),
+        );
+        return;
+      }
     }
 
+    // Request exact alarm scheduling permission (Android 12+)
+    var alarmStatus = await Permission.scheduleExactAlarm.status;
+    if (!alarmStatus.isGranted) {
+      alarmStatus = await Permission.scheduleExactAlarm.request();
+      if (!alarmStatus.isGranted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Exact alarm permission not granted!')),
+        );
+        return;
+      }
+    }
+
+// Proceed with date/time picking only if permissions are granted
     DateTime? date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -71,17 +88,13 @@ class _AlarmPageState extends State<AlarmPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-      appBar: AppBar(
-        title: const Text('Alarm Page'),
-        backgroundColor: const Color.fromARGB(255, 207, 207, 207),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 120),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -93,10 +106,17 @@ class _AlarmPageState extends State<AlarmPage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Add Alarm'),
+                  child: const Text(
+                    'Add Alarm',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 56),
               const Text(
                 'Alarms',
                 style: TextStyle(
