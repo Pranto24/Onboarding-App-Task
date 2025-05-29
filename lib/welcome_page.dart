@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'package:onboardingapptask/features/alarm/screens/alarm_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -75,7 +75,7 @@ class WelcomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AlarmApp(), // No location passed
+                    builder: (context) => AlarmPage(), // No location passed
                   ),
                 );
               },
